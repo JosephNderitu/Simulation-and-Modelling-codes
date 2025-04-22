@@ -14,8 +14,8 @@ Welcome to the Simulation and Modelling repository. This collection features Pyt
 ### 🔁 M/M/1 Queue Simulation
 - **File**: `mm1_sim.py`
 - **Description**: Simulates a single-server queuing model (M/M/1). Takes mean interarrival time, mean service time, and number of customers to process as input. Outputs key performance metrics like:
-  - Average delay in queue
-  - Average number in queue
+  - Average delay in the queue
+  - Average number in the queue
   - Server utilization
   - Time simulation ended
 
@@ -25,7 +25,7 @@ Welcome to the Simulation and Modelling repository. This collection features Pyt
 
 ### 🚗 Car and Truck Traffic Simulation
 - **File**: `CAR_TRUCK_SIMULATION_CAT3.py`
-- **Description**: Simulates traffic flow involving both cars and trucks. Helps analyze congestion points, travel time patterns, and traffic behavior in mixed vehicle scenarios.
+- **Description**: Simulates three cars: SUV, Truck, and Normal car designs and uses random. random to generate random colors for the vehicles and flowers.
 
 ---
 
@@ -42,6 +42,15 @@ Ensure you have **Python 3.x** installed. Recommended editors are:
 
 ```bash
 pip install numpy matplotlib
+install all the other packages required, such as:
+-tkinter
+-random
+-math, etc...
+---------------------------------------
+Once installed, import them. 
+import tkinter as tk
+import random
+import math 
 ```
 
 ### 📁 Cloning the Repository
@@ -87,7 +96,7 @@ python roll_dice.py
 ### 3. Car and Truck Traffic Simulation
 
 ```bash
-python CAR_TRUCK_SIMULATION_CAT3.py
+python car_truck_suv_demo.py
 ```
 
 ---
@@ -145,7 +154,3 @@ This repository demonstrates hands-on experience in:
 Feel free to reach out if you're hiring for roles in software engineering, simulation modeling, or data science!
 
 ```
-
----
-
-Let me know if you'd like this turned into an actual `README.md` file that you can download directly or if you want me to push it to your repo!
