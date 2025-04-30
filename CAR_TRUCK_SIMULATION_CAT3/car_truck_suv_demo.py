@@ -1,4 +1,3 @@
-
 import tkinter as tk
 import random
 import math
@@ -11,16 +10,77 @@ def random_color():
     b = int(random.random() * 256)  # Scale to 0-255
     return f'#{r:02x}{g:02x}{b:02x}'
 
+def random_size():
+    # Define min and max size
+    size_min = 0.25
+    size_max = 1.75  # Since original was 0.25 + 1.5 max = 1.75
+
+    # Generate a random size between min and max using random.random()
+    return size_min + random.random() * (size_max - size_min)
+
 def draw_flowers(canvas):
     canvas.delete("flowers")
     for i in range(6):
         x = 60 + i * 80
         y = 460
+
+        # Using random.random() with min-max calculations
+        stem_min = 25
+        stem_max = 40
+        stem_height = stem_min + random.random() * (stem_max - stem_min)
+
+        flower_min = 8
+        flower_max = 12
+        flower_size = flower_min + random.random() * (flower_max - flower_min)
+
+        center_size = flower_size * 0.5
+
+        # Draw stem
+        canvas.create_line(x, y + flower_size, x, y + flower_size + stem_height,
+                           fill="green", width=2, tags="flowers")
+
+        # Draw leaf
+        leaf_min = 6
+        leaf_max = 9
+        leaf_size = leaf_min + random.random() * (leaf_max - leaf_min)
+
+        leaf_pos_min = 0.3
+        leaf_pos_max = 0.7
+        leaf_y = y + flower_size + stem_height * (leaf_pos_min + random.random() * (leaf_pos_max - leaf_pos_min))
+
+        # Left or right leaf direction
+        leaf_direction = -1 if random.random() > 0.5 else 1
+        leaf_x = x + (leaf_size * 2 * leaf_direction)
+
+        # Create leaf
+        canvas.create_oval(x, leaf_y - leaf_size / 2,
+                           leaf_x, leaf_y + leaf_size / 2,
+                           fill="green", outline="darkgreen", tags="flowers")
+
+        # Create petals (5-8 petals)
         petal_color = random_color()
+        petal_min = 5
+        petal_max = 9  # Using 9 instead of 8 since we'll use int() which floors the value
+        num_petals = int(petal_min + random.random() * (petal_max - petal_min))
+
+        for p in range(num_petals):
+            angle = p * (2 * math.pi / num_petals)
+            petal_x = x + math.cos(angle) * flower_size
+            petal_y = y + math.sin(angle) * flower_size
+
+            petal_size_min = 0.8
+            petal_size_max = 1.2
+            petal_size = flower_size * (petal_size_min + random.random() * (petal_size_max - petal_size_min))
+
+            canvas.create_oval(petal_x - petal_size, petal_y - petal_size,
+                               petal_x + petal_size, petal_y + petal_size,
+                               fill=petal_color, outline=None, tags="flowers")
+
+        # Draw flower center
         center_color = random_color()
-        canvas.create_oval(x - 8, y - 8, x + 8, y + 8, fill=petal_color, outline=None, tags="flowers")
-        canvas.create_oval(x - 4, y - 4, x + 4, y + 4, fill=center_color, outline=None, tags="flowers")
-        canvas.create_line(x, y + 8, x, y + 25, fill="green", width=2, tags="flowers")
+        canvas.create_oval(x - center_size, y - center_size,
+                           x + center_size, y + center_size,
+                           fill=center_color, outline=None, tags="flowers")
 
 def draw_wheel(canvas, wheel_x, y_position, wheel_radius, body_color, tags="vehicle"):
     """Draw a wheel that blends better with the vehicle and includes mud flaps, without decorative elements"""
@@ -79,6 +139,7 @@ def draw_wheel(canvas, wheel_x, y_position, wheel_radius, body_color, tags="vehi
             inner_x, inner_y, outer_x, outer_y,
             fill="#808080", width=2, tags=tags
         )
+
 
 def draw_car(canvas):
     canvas.delete("vehicle")
@@ -191,13 +252,11 @@ def draw_car(canvas):
     # Mirror glass
     canvas.create_rectangle(188, 278, 195, 287, fill=glass_color, outline="black", width=1, tags="vehicle")
 
-    # Import math for the spoke calculations
-    import math
-
     # Draw wheels with improved design that blends with the car
     wheel_radius = 20
     draw_wheel(canvas, 200, 320, wheel_radius, body_color)
     draw_wheel(canvas, 400, 320, wheel_radius, body_color)
+
 
 def draw_truck(canvas):
     canvas.delete("vehicle")
@@ -295,9 +354,6 @@ def draw_truck(canvas):
     # Mirror glass
     canvas.create_rectangle(148, 265, 158, 280, fill=glass_color, outline="black", width=1, tags="vehicle")
 
-    # Import math for the spoke calculations
-    import math
-
     # Draw wheels with improved design
     wheel_radius = 22
     draw_wheel(canvas, 200, 320, wheel_radius, body_color)
@@ -320,7 +376,7 @@ def draw_suv(canvas):
     # Main body with rounded corners for more professional look
     canvas.create_rectangle(150, 260, 450, 320, fill=body_color, outline="black", width=1, tags="vehicle")
 
-    # Modified front - slightly more flat for better 2D front profile
+    #  front
     canvas.create_polygon(
         150, 260,  # Top left
         140, 260,  # Front top
@@ -329,7 +385,7 @@ def draw_suv(canvas):
         fill=body_color, outline="black", width=1, tags="vehicle"
     )
 
-    # Modified back - squared off with slight angle
+    # Modified back
     canvas.create_polygon(
         450, 260,  # Top right
         460, 260,  # Back top
@@ -338,7 +394,7 @@ def draw_suv(canvas):
         fill=body_color, outline="black", width=1, tags="vehicle"
     )
 
-    # Roof section - more rounded corners
+    # Roof section
     canvas.create_polygon(
         180, 260,
         200, 220,
@@ -355,7 +411,7 @@ def draw_suv(canvas):
         y_pos = 285 + i * 5
         canvas.create_line(140, y_pos, 150, y_pos, fill="#444444", width=1, tags="vehicle")
 
-    # Headlights - perfectly integrated with front face
+    # Headlights
     # Top headlight
     canvas.create_rectangle(140, 265, 150, 275, fill="#FFFFCC", outline="black", width=1, tags="vehicle")
     # Light detail
@@ -408,28 +464,47 @@ def draw_suv(canvas):
     # Mirror glass
     canvas.create_rectangle(168, 265, 176, 275, fill=glass_color, outline="black", width=1, tags="vehicle")
 
-    # Import math for the spoke calculations
-    import math
-
     # Draw wheels with improved design
     wheel_radius = 22
     draw_wheel(canvas, 200, 320, wheel_radius, body_color)
     draw_wheel(canvas, 400, 320, wheel_radius, body_color)
 
+def scale_vehicle(canvas):
+    # Get all objects with the "vehicle" tag
+    vehicle_items = canvas.find_withtag("vehicle")
+
+    if vehicle_items:
+        # Calculate center of the vehicle for scaling
+        bbox = canvas.bbox(*vehicle_items)
+        if bbox:
+            # Center of the vehicle
+            center_x = (bbox[0] + bbox[2]) / 2
+            center_y = (bbox[1] + bbox[3]) / 2
+
+            # Generate random size between 0.8 and 1.2
+            size_factor = random_size()
+
+            # Apply scaling to all vehicle elements from the center
+            for item in vehicle_items:
+                canvas.scale(item, center_x, center_y, size_factor, size_factor)
+
 def show_vehicle_info(vehicle_type):
     info.delete(1.0, tk.END)
     if vehicle_type == "Car":
         car = Car("Elegance", 2023, 15000, 35000.0, 4)
-        info.insert(tk.END, f"Type: Sedan\nMake: {car.get_make()}\nModel Year: {car.get_model()}\nMileage: {car.get_mileage()} km\n"
-                            f"Price: ${car.get_price():,.2f}\nDoors: {car.get_doors()}")
+        info.insert(tk.END,
+                    f"Type: Sedan\nMake: {car.get_make()}\nModel Year: {car.get_model()}\nMileage: {car.get_mileage()} km\n"
+                    f"Price: ${car.get_price():,.2f}\nDoors: {car.get_doors()}")
     elif vehicle_type == "Truck":
         truck = Truck("SpeedyCargo", 2024, 8000, 48000.0, "RWD")
-        info.insert(tk.END, f"Type: Courier Truck\nMake: {truck.get_make()}\nModel Year: {truck.get_model()}\nMileage: {truck.get_mileage()} km\n"
-                            f"Price: ${truck.get_price():,.2f}\nDrive Type: {truck.get_drive_type()}")
+        info.insert(tk.END,
+                    f"Type: Courier Truck\nMake: {truck.get_make()}\nModel Year: {truck.get_model()}\nMileage: {truck.get_mileage()} km\n"
+                    f"Price: ${truck.get_price():,.2f}\nDrive Type: {truck.get_drive_type()}")
     elif vehicle_type == "SUV":
         suv = SUV("Voyager", 2025, 5000, 62000.0, 5)
-        info.insert(tk.END, f"Type: SUV\nMake: {suv.get_make()}\nModel Year: {suv.get_model()}\nMileage: {suv.get_mileage()} km\n"
-                            f"Price: ${suv.get_price():,.2f}\nPassenger Capacity: {suv.get_pass_cap()}")
+        info.insert(tk.END,
+                    f"Type: SUV\nMake: {suv.get_make()}\nModel Year: {suv.get_model()}\nMileage: {suv.get_mileage()} km\n"
+                    f"Price: ${suv.get_price():,.2f}\nPassenger Capacity: {suv.get_pass_cap()}")
 
 def display(vehicle_type):
     if vehicle_type == "Car":
@@ -438,7 +513,13 @@ def display(vehicle_type):
         draw_truck(canvas)
     elif vehicle_type == "SUV":
         draw_suv(canvas)
+
+    # Scale the vehicle with random size
+    scale_vehicle(canvas)
+
+    # Show vehicle information
     show_vehicle_info(vehicle_type)
+
 
 # Custom rounded rectangle function
 def create_round_rectangle(self, x1, y1, x2, y2, radius=25, **kwargs):
@@ -464,13 +545,14 @@ def create_round_rectangle(self, x1, y1, x2, y2, radius=25, **kwargs):
               x1, y1]
     return self.create_polygon(points, **kwargs, smooth=True)
 
+
 tk.Canvas.create_round_rectangle = create_round_rectangle
 
 # GUI Setup
 root = tk.Tk()
 root.title("Gikuru Codes")
 
-canvas = tk.Canvas(root, width=600, height=500, bg="white")
+canvas = tk.Canvas(root, width=650, height=550, bg="white")
 canvas.pack()
 
 btn_frame = tk.Frame(root)
